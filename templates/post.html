@@ -1,0 +1,90 @@
+{% include "header.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+{% include "flash_message.html" %}
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('{{post.img_url}}')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-heading">
+                    <h1>{{ post.title }}</h1>
+                    <h2 class="subheading">{{ post.subtitle }}</h2>
+                    <span class="meta"
+                    >Posted by
+            <a href="#">{{ post.author.name }}</a>
+            on {{ post.date }}
+          </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                {{ post.body|safe }}
+                <div>
+                    {% if current_user.is_authenticated %}
+                    <div class="d-flex justify-content mt-4">
+                        <a
+                                class="btn btn-sm btn-primary mb-4"
+                                href="{{url_for('edit_post', post_id=post.id)}}"> Edit Post
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    {% if current_user.id == 1 %}
+                    <div class="d-flex justify-content mb-4">
+                        <a
+                                class="btn btn-sm btn-danger"
+                                href="{{url_for('delete_post', post_id=post.id)}}"> Delete Post
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+                {{ ckeditor.config(name='comment') }}
+
+                {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+
+                {% if post.blog_comments %}
+                <div class="comment">
+                    <ul class="commentList">
+                        <!-- Show all comments -->
+
+                        {% for comment in post.blog_comments %}
+                        <li>
+                            <div class="commenterImage">
+                                <img
+                                        src="{{ comment.comment_author.email | gravatar(150) }}" alt="User Avatar }}"
+                                />
+
+                            </div>
+                            <div class="commentText">
+                                {{comment.text|safe}}
+                                <span class="sub-text">{{comment.comment_author.name}}</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No comments yet.</p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+{% include "footer.html" %}
+
+
+
+
+
+
