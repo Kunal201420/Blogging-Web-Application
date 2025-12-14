@@ -8,10 +8,12 @@ from forms import RegisterForm, BlogForm, LoginForm, CommentsForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
 from typing import List
+from dotenv import load_dotenv
 import datetime
 import hashlib
 import os
 
+load_dotenv()
 
 
 
@@ -19,8 +21,9 @@ import os
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(32)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 Bootstrap5(app)
+
 
 ckeditor = CKEditor(app)
 
